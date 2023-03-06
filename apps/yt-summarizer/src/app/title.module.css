@@ -1,0 +1,117 @@
+.titleWrapper {
+  --from: #0326d2;
+  --middle: #a600ff;
+  --to: #ff0073;
+
+  position: relative;
+}
+
+.title {
+  z-index: 10;
+  background: linear-gradient(30deg, var(--from), var(--middle) 55%, var(--to));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.titleBlur {
+  position: absolute;
+  z-index: 10;
+  right: 0;
+  left: 0;
+}
+
+.titleBlur:after,
+.titleBlur:before {
+  content: attr(data-title);
+  position: absolute;
+  left: 0;
+  padding: 0.05em 0;
+  background: linear-gradient(30deg, var(--from), var(--middle) 55%, var(--to));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  opacity: var(--opacity);
+}
+
+.titleBlur:before {
+  --opacity: 0.2;
+  filter: blur(3px);
+}
+
+@-moz-document url-prefix() {
+  .titleBlur:before {
+    --opacity: 0.3;
+  }
+}
+
+.titleBlur:after {
+  --opacity: 0.2;
+  filter: blur(5px);
+}
+
+@-moz-document url-prefix() {
+  .titleBlur:after {
+    --opacity: 0.3;
+  }
+}
+
+.titleBlur:before {
+  animation: homey-pro-intro-title-pulse-1 15s infinite;
+}
+
+.titleBlur:after {
+  animation: homey-pro-intro-title-pulse-2 20s infinite;
+}
+
+@keyframes homey-pro-intro-title-pulse-1 {
+  0% {
+    opacity: calc(var(--opacity) * 0.6);
+    transform: scaleY(1);
+  }
+
+  30% {
+    opacity: calc(var(--opacity) * 1.1);
+    transform: scaleY(0.8);
+  }
+
+  60% {
+    opacity: calc(var(--opacity) * 0.3);
+  }
+
+  70% {
+    opacity: calc(var(--opacity) * 0.8);
+    transform: scaleY(1.2);
+  }
+
+  to {
+    opacity: calc(var(--opacity) * 0.6);
+    transform: scaleY(1);
+  }
+}
+
+@keyframes homey-pro-intro-title-pulse-2 {
+  0% {
+    opacity: calc(var(--opacity) * 0.8);
+    transform: scaleY(1);
+  }
+
+  20% {
+    opacity: calc(var(--opacity) * 0.3);
+    transform: scaleY(2);
+  }
+
+  60% {
+    opacity: calc(var(--opacity) * 1);
+  }
+
+  80% {
+    opacity: calc(var(--opacity) * 1.1);
+    transform: scaleY(0.9);
+  }
+
+  to {
+    opacity: calc(var(--opacity) * 0.8);
+    transform: scaleY(1);
+  }
+}
