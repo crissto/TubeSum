@@ -19,6 +19,7 @@ importers:
       '@types/node': ^18.14.4
       '@types/react': ^18.0.28
       '@types/react-dom': ^18.0.11
+      '@vercel/analytics': ^0.1.11
       autoprefixer: ^10.4.13
       clsx: ^1.2.1
       eslint-config-custom: workspace:*
@@ -36,6 +37,7 @@ importers:
       zod: ^3.20.6
       zustand: ^4.3.5
     dependencies:
+      '@vercel/analytics': registry.npmjs.org/@vercel/analytics/0.1.11_react@18.2.0
       clsx: registry.npmjs.org/clsx/1.2.1
       framer-motion: registry.npmjs.org/framer-motion/10.0.1_biqbaboplfbrettd7655fr4n2y
       next: registry.npmjs.org/next/13.2.3_biqbaboplfbrettd7655fr4n2y
@@ -507,6 +509,17 @@ packages:
     dependencies:
       '@typescript-eslint/types': registry.npmjs.org/@typescript-eslint/types/5.54.0
       eslint-visitor-keys: registry.npmjs.org/eslint-visitor-keys/3.3.0
+    dev: false
+
+  registry.npmjs.org/@vercel/analytics/0.1.11_react@18.2.0:
+    resolution: {integrity: sha512-mj5CPR02y0BRs1tN3oZcBNAX9a8NxsIUl9vElDPcqxnMfP0RbRc9fI9Ud7+QDg/1Izvt5uMumsr+6YsmVHcyuw==, registry: https://registry.npmjs.com/, tarball: https://registry.npmjs.org/@vercel/analytics/-/analytics-0.1.11.tgz}
+    id: registry.npmjs.org/@vercel/analytics/0.1.11
+    name: '@vercel/analytics'
+    version: 0.1.11
+    peerDependencies:
+      react: ^16.8||^17||^18
+    dependencies:
+      react: registry.npmjs.org/react/18.2.0
     dev: false
 
   registry.npmjs.org/acorn-jsx/5.3.2_acorn@8.8.2:
