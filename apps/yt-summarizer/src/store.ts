@@ -20,7 +20,7 @@ const initialStates: States = {
 
 export const useSetBoundStore = create<Store>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       ...initialStates,
       setApiKey: (key: string) => set({ apiKey: key }),
     }),

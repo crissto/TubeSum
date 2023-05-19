@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@supabase/auth-helpers-nextjs": "^0.5.5",
+    "@supabase/auth-helpers-react": "^0.3.1",
     "@vercel/analytics": "^0.1.11",
     "clsx": "^1.2.1",
     "framer-motion": "^10.0.1",
@@ -17,6 +19,7 @@
     "react-content-loader": "^6.2.0",
     "react-dom": "^18.2.0",
     "react-wrap-balancer": "^0.4.0",
+    "server-only": "^0.0.1",
     "summarizer-logic": "workspace:*",
     "zod": "^3.20.6",
     "zustand": "^4.3.5"

@@ -1,53 +1,97 @@
 "use client";
 
-import { FormEvent, useRef, useState } from "react";
+import { FormEvent, useState } from "react";
 import Balancer from "react-wrap-balancer";
 import { useBoundStore } from "../store";
 
 export default function Form() {
-  const [loading, setLoading] = useState<boolean>(false);
+  const [summaryState, setSummaryState] = useState<{
+    loading: boolean;
+    summary: string;
+    error: string;
+  }>({
+    loading: false,
+    summary: "",
+    error: "",
+  });
   const [summary, setSummary] = useState<string>();
-  const urlRef = useRef<HTMLInputElement>(null);
 
   const apiKey = useBoundStore((store) => store.apiKey);
 
+  const getIdFromUrl = (url: string) => {
+    const id = url.split("v=")[1];
+    const ampersandPosition = id.indexOf("&");
+    if (ampersandPosition !== -1) {
+      return id.substring(0, ampersandPosition);
+    }
+    return id;
+  };
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    setLoading(true);
+    setSummaryState((state) => ({ ...state, loading: true }));
     e.preventDefault();
-    const url = urlRef.current?.value;
 
+    const target = e.target as typeof e.target & {
+      url: { value: string };
+    };
+
+    const url = target?.url?.value;
     if (url) {
-      const id = url.split("v=")[1];
+      const id = getIdFromUrl(url);
 
-      const apiUrl = new URL("/api/summary", window.location.href);
-      apiUrl.searchParams.set("videoID", id);
-      apiUrl.searchParams.set("lang", "en");
-      apiUrl.searchParams.set("apiKey", apiKey);
+      const response = await fetch("/api/summary", {
+        method: "POST",
+        body: JSON.stringify({
+          videoID: id,
+          lang: "en",
+          apiKey,
+        }),
+      });
 
-      const response = await fetch(apiUrl.toString());
+      if (!response.ok) {
+        console.error(response);
+        setSummaryState((state) => ({
+          ...state,
+          loading: false,
+        }));
+        throw new Error("Failed to fetch summary");
+      }
       const data = await response.json();
 
-      setSummary(data.summary);
-      setLoading(false);
+      if (data.error) {
+        console.error(data.error);
+        setSummaryState((state) => ({
+          ...state,
+          loading: false,
+          error: data.error,
+        }));
+        throw new Error("Failed to fetch summary");
+      }
+
+      setSummaryState((state) => ({
+        ...state,
+        loading: false,
+        summary: data.summary,
+      }));
     }
   };
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="mx-16">
         <div className="relative">
           <input
             type="text"
+            name="url"
             disabled={!apiKey}
             placeholder={
               apiKey
                 ? "Enter a youtube video url"
                 : "You need to set an OpenAI API key in the gear above"
             }
-            className="w-full h-12 pl-3 text-lg border-2 border-slate-200 rounded-lg focus:outline-none focus:border-slate-400 pr-[10rem]"
+            className="w-full h-12 pl-3 text-lg border-2 border-slate-200 rounded-lg focus:outline-none focus:border-slate-400 pr-[8rem]"
             pattern="https://www.youtube.com/watch\?v=[a-zA-Z0-9_-]{11}"
             required
-            ref={urlRef}
           />
           <div className="absolute top-2 right-2 bottom-2">
             <button
@@ -61,7 +105,9 @@ export default function Form() {
         </div>
       </form>
 
-      {loading && <div className="mt-4 text-center">Loading...</div>}
+      {summaryState.loading && (
+        <div className="mt-4 text-center">Loading...</div>
+      )}
 
       {summary && (
         <div className="mt-12 text-center p-4 bg-slate-100/30 border border-slate-200 rounded-xl">

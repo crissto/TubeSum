@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "build": "turbo run build",
-    "dev": "turbo run dev",
+    "dev": "dotenv -- turbo run dev",
     "lint": "turbo run lint",
     "start": "turbo run start",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
@@ -13,5 +13,8 @@
     "prettier": "^2.8.4",
     "turbo": "latest"
   },
-  "packageManager": "pnpm@7.15.0"
+  "packageManager": "pnpm@7.15.0",
+  "dependencies": {
+    "dotenv-cli": "^7.0.0"
+  }
 }

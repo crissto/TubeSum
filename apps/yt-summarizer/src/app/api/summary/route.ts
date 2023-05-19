@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { getSummaryFromVideo } from "summarizer-logic";
+import { createSummary, getSubtitles } from "summarizer-logic";
 
 const requestSchema = z.object({
   videoID: z.string(),
@@ -7,14 +7,9 @@ const requestSchema = z.object({
   apiKey: z.string(),
 });
 
-export async function GET(req: Request) {
-  // Get the video ID from the request
-  const url = new URL(req.url);
-
+export async function POST(req: Request) {
   // Validate the request
-  const result = requestSchema.safeParse(
-    Object.fromEntries(url.searchParams.entries())
-  );
+  const result = requestSchema.safeParse((await req.json()) || {});
 
   if (!result.success) {
     return new Response(
@@ -28,9 +23,22 @@ export async function GET(req: Request) {
   const { videoID, lang, apiKey } = result.data;
 
   try {
-    const summary = await getSummaryFromVideo(videoID, lang, apiKey);
+    const subtitles = await getSubtitles({ videoID, lang }).catch((e) => {
+      console.error(e);
+      return [];
+    });
+
+    const summary = await createSummary({
+      text: subtitles.join(" "),
+      apiKey,
+    }).catch((e) => {
+      console.error(e);
+      return { error: (e as Error).message };
+    });
+
     return new Response(JSON.stringify(summary));
   } catch (e) {
+    console.error(e);
     return new Response(
       JSON.stringify({
         error: (e as Error).message,
